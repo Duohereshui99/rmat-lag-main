@@ -59,7 +59,7 @@ ccccccc
 !         beta%lmax=max(nint(abs(beta%j_tot-abs(beta%jd-beta%j_alpha))),nint(beta%j_tot+abs(beta%jd-beta%j_alpha))
 !      &   ,nint(abs(beta%j_tot-(beta%jd+beta%j_alpha))),nint(beta%j_tot+beta%jd+beta%j_alpha))
         beta%lmin=0d0
-        beta%lmax=0d0
+        beta%lmax=6d0
 ccccccc
         do l=beta%lmin,beta%lmax
              if(abs((-1d0)**l*beta%Pi_alpha*beta%Pi_d-beta%Pi_tot)<tol) then 
@@ -89,8 +89,7 @@ ccccccc
                 beta%nch=beta%nch+1
              end if
         end do
-      !  Ec(1)=0; Ec(2)=0.005d0; Ec(3)=0.126d0; Ec(4)=0.266d0
-         Ec=0
+        Ec(1)=0; Ec(2)=0.005d0; Ec(3)=0.126d0; Ec(4)=0.266d0
 ccccccc
 100     format('Number of Channels=',I2)
 101     format(25('-'),'Channel Angular Momentum L',25('-'))
@@ -99,7 +98,6 @@ ccccccc
         write(*,100) beta%nchmax
 ccccccc
         write(*,101)
-        lc=20
         do i=1,beta%nchmax
            write(*,102) i,lc(i)
         end do
