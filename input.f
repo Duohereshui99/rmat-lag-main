@@ -16,7 +16,7 @@ ccccccc
             character(len=70) :: title, formattedTitle
             character(len=68) :: centeredTitle
             integer :: titleLength, leftSpace, rightSpace
-            title = " The Program of Coupled Channels Calculation For Alpha Decay "
+            title = " The Program of Coupled Channels Calculation For 2B System "
             titleLength = len_trim(title)
             leftSpace = (68 - titleLength) / 2
             rightSpace = 68 - titleLength - leftSpace
@@ -61,6 +61,7 @@ ccccccc
             aa=0.5d0+0.33d0*I_d
 ccccccc
             R_C=1.2d0*(mass_d**(1.d0/3.d0)+mass_alpha**(1.d0/3.d0))
+ccccccc
         end subroutine
 ccccccc
 !-----------------------------------------------------------------------

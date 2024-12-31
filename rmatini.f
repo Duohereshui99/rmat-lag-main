@@ -74,7 +74,7 @@ ccccccc
                 allocate(vr1(1:nr*beta%nchmax,1:nr*beta%nchmax))
                 allocate(index(1:nr*beta%nchmax))
 ccccccc
-!lagrange laguerre mesh
+!lagrange legendre mesh
                 call LEGZO(nr,xle,wle)
 ccccccc
                 do k=1,nr
@@ -115,6 +115,7 @@ ccccccc
             real*8::xx,zz,vcen,vtens,vls,rn,an,r
             complex*16::cvn
             real*8,allocatable::wr(:),wi(:),vr(:,:),work(:)
+            real*8::x,y1,y2
 ccccccc
         if(allocated(Vc)) deallocate(Vc)
         if(allocated(VijN)) deallocate(VijN)
@@ -147,17 +148,20 @@ ccccccc
 !             Vc(i,2,1)=Vc(i,1,2)
 !             Vc(i,2,2)=vcen-2*(beta%j_tot+2)*vtens/(2*beta%j_tot+1)-(beta%j_tot+2)*vls
 !         end do
-                rn=1.1132d0*(mass_d**(1.d0/3.d0)+mass_alpha**(1.d0/3.d0))
-                an=0.5803d0
-                write(*,*) 'rn=',rn,' an=',an
-                do i=1,nr
-                    r=xle(i)*rmax
-                    xx=1+exp((r-rn)/an)
-                    cvn=-dcmplx(100,10)/xx
-                    Vc(i,1,1)=cvn+z12*1.44d0/r
-                !    Vc(i,2,2)=Vc(i,1,1)
-                end do
 ccccccc
+            open(10,file='cpot.txt')
+            do i=1,2
+                do j=1,2
+                    do k=1,nr
+                        read(10,*) x,y1,y2
+                        Vc(k,i,j)=cmplx(y1,y2)
+                    end do
+                end do
+            end do    
+            close(10)
+
+ccccccc
+
 !!coupled channel
 !4th order deformation term and 16th order deformation term
 !\sum_{l=2,4}\sqrt{\frac{(2l+1)(2I+1)}{4\pi(2J+1)}}\beta_{l}R_{d}\times[\bra{I,0,l,0}\ket{J,0}]^2
@@ -378,8 +382,8 @@ ccccccc H^{+}=G+iF, H^{-}=G-iF, only give H_i^{+} and H_i^{-}, i channel is enou
                         dhln_i=cmplx(GCP_i(li),-FCP_i(li),kind=8)
 ccccccc
 !-SH^{+},no hln_i*delta(i,j) term
-                    uij(i,j)=(hln_i*delta(i,j)-Smat(i,j)*hlp_i)*(0,0.5d0)!*(hbarc*k_i/mu)**(-0.5d0)!*(0d0,1d0)/2d0     
-                    uijp(i,j)=(dhln_i*delta(i,j)*k_i-Smat(i,j)*dhlp_i*k_i)*(0,0.5d0)!*(hbarc*k_i/mu)**(-0.5d0)!*(0d0,1d0)/2d0
+                    uij(i,j)=(hln_i*delta(i,j)-Smat(i,j)*hlp_i)*(0,0.5d0)
+                    uijp(i,j)=(dhln_i*delta(i,j)*k_i-Smat(i,j)*dhlp_i*k_i)*(0,0.5d0)
 ccccccc
                         deallocate(FC_i,GC_i,FCP_i,GCP_i)
                     end do
@@ -469,13 +473,6 @@ ccccccc
                     do j=1,beta%nchmax
                         write(*,204) i, j, abs(Smat(i,j))
                     end do
-                end do
-ccccccc
-                write(*,212)
-ccccccc
-                write(*,210)
-                do i=1,beta%nchmax
-                    write(*,211) i,Gamma(i)
                 end do
 ccccccc
                 write(*,212)
